@@ -17,7 +17,8 @@ menuSliderArray = [
 menuSliderCurrent = 0;
 
 // Add ACE menu options if ACE detected
-if (isClass (configfile >> "CfgPatches" >> "ace_main")) then {
+//if (isClass (configfile >> "CfgPatches" >> "ace_main")) then {
+if(false) then {
 	menuSliderArray pushBack ["ACE OPTIONS", 6000, 6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009, 6010, 6011, 6012, 6013, 6014, 6015, 6016, 6017, 6018, 6019, 6020, 6021];
 	_index = lbAdd [6001, "Anyone"];
 	_index = lbAdd [6001, "Engineer only"];

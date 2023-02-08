@@ -17,7 +17,7 @@ publicVariable "aoOptionSelect";
 minesEnabled = profileNamespace getVariable ["DCO_minesEnabled", 0];
 publicVariable "minesEnabled";
 reviveDisabled = profileNamespace getVariable ["DCO_reviveDisabled", 0];
-publicVariable "reviveDisabled";
+	publicVariable "reviveDisabled";
 diag_log "DRO: variables loaded from profile";
 
 //ACE Variables

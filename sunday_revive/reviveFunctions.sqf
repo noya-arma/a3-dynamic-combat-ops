@@ -28,11 +28,11 @@ rev_AIListen = {
 					// Apply distance weighting
 					_dist = _medic distance _downedUnit;
 					if (_dist <= 200) then {
-						_thisWeight = _thisWeight + ((1-(_dist/100))*0.5);
+						_thisWeight = (_thisWeight + ((1-(_dist/100))*0.5)) max 0;
 					};										
 					// Apply timeout weighting
 					_thisWeight = _thisWeight - ((_medic getVariable ["rev_timeoutCounter", 0])*0.9);
-					if (_thisWeight > 1) then {_thisWeight = 1};
+					_thisWeight = _thisWeight max 1;
 					_availableMedics pushBack _medic;
 					_medicWeights pushBack _thisWeight;
 				};				
@@ -41,7 +41,7 @@ rev_AIListen = {
 			if (count _availableMedics > 0) then {
 				diag_log _availableMedics;
 				diag_log _medicWeights;
-				_chosenMedic = [_availableMedics, _medicWeights] call BIS_fnc_selectRandomWeighted;
+				_chosenMedic = _availableMedics selectRandomWeighted _medicWeights;
 				[_chosenMedic, _downedUnit] remoteExec ["rev_AIHeal", _chosenMedic];
 				_chosenMedic setVariable ["rev_revivingUnit", true, true];	
 			};			
@@ -121,6 +121,7 @@ rev_resetAI = {
 	private _firstName = ((nameLookup select _id) select 0);
 	private _lastName = ((nameLookup select _id) select 1);
 	private _speaker = ((nameLookup select _id) select 2);
+	private _face = ((nameLookup select _id) select 3);
 	private _pos = [(getPos _unit), 0, 50, 1, 0, -1, 0, [], [[0,0,0],[0,0,0]]] call BIS_fnc_findSafePos;
 	if (_pos isEqualTo [0,0,0]) then {
 		_pos = [(getPos player), 0, 50, 1, 0, -1, 0, [], [[0,0,0],[0,0,0]]] call BIS_fnc_findSafePos;
@@ -128,35 +129,62 @@ rev_resetAI = {
 	if (_pos isEqualTo [0,0,0]) exitWith {
 		hint "No valid location found for unit reset!";
 	};
+	
 	private _grp = createGroup playersSide;
 	private _unitNew = _grp createUnit [_class, _pos, [], 0, "NONE"];
 	diag_log format ["DRO: reset - created unit %1 in group %2, side %3", _unitNew, _grp, playersSide];
+	
 	if (reviveDisabled < 3) then {	
 		[_unitNew, _unit] call rev_addReviveToUnit;
 	};
 	deleteVehicle _unit;
+	
 	[_unitNew, _varName] remoteExec ["setVehicleVarName", 0, true];
 	diag_log format ["DRO: reset - unit %1 given var name %2", _unitNew, _varName];
 	diag_log format ["DRO: reset - unit %1 new var name is %2", _unitNew, vehicleVarName _unitNew];
+	
 	[_unitNew, ([format ["%1 %2", _firstName, _lastName], _firstName, _lastName])] remoteExec ["setName", 0, true];
 	[_unitNew, _lastName] remoteExec ["setNameSound", 0, true];
-	[_unitNew, _firstName, _lastName, _speaker] remoteExec ['sun_setNameMP', 0, true];
+	[_unitNew, _firstName, _lastName, _speaker, _face] remoteExec ['sun_setNameMP', 0, true];
 	diag_log "DRO: reset - names set";
+	
 	_unitNew joinAsSilent [_playerGroup, _id];
 	diag_log format ["DRO: reset - unit %1 joined to group %2 in position %3", _unitNew, _playerGroup, _id];
+	
 	_unitNew setUnitLoadout _loadout;
 	_unitNew setVariable ["respawnLoadout", (getUnitLoadout _unitNew), true];
+	
 	_unitNew setUnitTrait ["Medic", true];
 	_unitNew setUnitTrait ["engineer", true];
 	_unitNew setUnitTrait ["explosiveSpecialist", true];
 	_unitNew setUnitTrait ["UAVHacker", true];
-	if ((paramsArray select 0) == 1) then {
+
+	_unitNew setUnitTrait ["ACE_medical_medicClass", true, true];
+	_unitNew setUnitTrait ["ACE_IsEngineer", true, true];
+	_unitNew setUnitTrait ["ACE_isEOD", true, true];
+	
+	if ((["SOGPFRadioSupportTrait", 0] call BIS_fnc_getParamValue) == 1) then {
+		_unitNew setUnitTrait ["vn_artillery", true, true];
+	};
+	
+	_unitNew setCaptive false;
+
+	if ((staminaDisabled) > 0) then {
+		_unitNew setAnimSpeedCoef 1;
+		_unitNew enableFatigue false;
+		_unitNew enableStamina false;
+		if (!isNil "ace_advanced_fatigue_enabled") then {
+			[missionNamespace, ["ace_advanced_fatigue_enabled", false]] remoteExec ["setVariable", _unitNew];
+		};
+	};
+
+	if ((["Respawn", 0] call BIS_fnc_getParamValue) < 3) then {
 		[_unitNew, ["respawn", {
 			_unitNew = (_this select 0);				
 			deleteVehicle _unitNew
 		}]] remoteExec ["addEventHandler", _unitNew, true];
 	} else {
-		[_unitNew, ["killed", {[(_this select 0)] execVM "sunday_system\fakeRespawn.sqf"}]] remoteExec ["addEventHandler", _unitNew, true];
+		[_unitNew, ["killed", {[(_this select 0)] execVM "sunday_system\player_setup\fakeRespawn.sqf"}]] remoteExec ["addEventHandler", _unitNew, true];
 		[_unitNew, ["respawn", {
 			_unitNew = (_this select 0);				
 			deleteVehicle _unitNew
@@ -540,7 +568,7 @@ rev_AIHeal = {
 	//[_medic, "CARELESS"] remoteExec ["switchBehaviour", 2];
 	//["CARELESS"] call switchBehaviour;
 	//doStop _medic;
-	_moveTimeout = time + 90;
+	_moveTimeout = time + 60;
 
 	_lastName = "";
 	if (!isPlayer _target) then {
@@ -590,9 +618,10 @@ rev_AIHeal = {
 			_cancelRevive = true;
 		};
 		if (time > _moveTimeout) exitWith {
-			diag_log format ["Revive: AI %1 cancelling revive due to timeout", _medic];
+			diag_log format ["Revive: AI %1 forced revive due to timeout", _medic];
 			_medic setVariable ["rev_timeoutCounter", ((_medic getVariable ['rev_timeoutCounter', 0])+1), true];	
-			_cancelRevive = true;
+			//_cancelRevive = true;			
+			_medic setPos (_target getPos [1, (random 360)]);
 		};		
 	};
 

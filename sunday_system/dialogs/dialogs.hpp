@@ -54,7 +54,7 @@ class DRO_lobbyDialog {
 	idd = 626262;
 	movingenable = false;
 	
-	class controls {		
+	class controls {
 		class menuBackground1: sundayText {
 			idc = 1050;			
 			x = 0.0 * safezoneW + safezoneX;
@@ -138,7 +138,7 @@ class DRO_lobbyDialog {
 		};
 		class unitTextBG: sundayText {
 			idc = 1159;
-			text = "";			
+			text = "";
 			x = 0.73 * safezoneW + safezoneX;			
 			y = 0.14 * safezoneH + safezoneY;
 			w = 0.27 * safezoneW;
@@ -161,9 +161,11 @@ class DRO_lobbyDialog {
 			style = 48 + 2048;			
 			text = "\A3\ui_f\data\igui\cfg\simpleTasks\types\map_ca.paa";			
 			x = 0 * safezoneW + safezoneX;
-			y = 0.95 * safezoneH + safezoneY;
-			w = 0.03 * safezoneW;
-			h = 0.05 * safezoneH;			
+			y = 0 * safezoneH + safezoneY;
+			w = 0.2 * safezoneW;
+			h = 1 * safezoneH;
+			colorBackground[] = { 0, 0, 0, 1 };			
+			fade = 0;
 			action = "[] spawn sun_lobbyMapPreview";
 		};
 		class sundayInfoText: sundayText
@@ -435,18 +437,19 @@ class sundayDialog {
 			y = 0 * safezoneH + safezoneY;
 			w = 0.18 * safezoneW;
 			h = 1 * safezoneH;
-			colorBackground[] = { 0.1, 0.1, 0.1, 0.6 };
+			colorBackground[] = { 0, 0, 0, 1 };			
+			fade = 0;
 			text = "";
-		};
+		};	
 		class sundayTitlePic: RscPicture
-		{
+		{			
 			idc = 1098;
 			text = "images\combat_icon.paa";
 			x = 0.025 * safezoneW + safezoneX;
 			y = 0.0 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			h = 0.21 * safezoneH;			
-		};
+		};		
 		class sundayWarningBox: sundayText
 		{
 			idc = 1052;
@@ -472,7 +475,7 @@ class sundayDialog {
 			class Attributes {				
 				color = "#ff0000";
 				valign = "middle";
-			};			
+		};
 		};				
 		class sundayTitleChoose: sundayHeading
 		{
@@ -633,10 +636,10 @@ class sundayDialog {
 			idc = 1105;
 			text = "Time of day"; //--- ToDo: Localize;
 			x = -0.2 * safezoneW + safezoneX;
-			y = 0.3 * safezoneH + safezoneY;
+			y = 0.48 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			h = 0.044 * safezoneH;
-		};		
+	};
 		class sundayTBTime: DROCombo
 		{
 			idc = 2103;
@@ -653,7 +656,7 @@ class sundayDialog {
 			y = 0.36 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			h = 0.044 * safezoneH;
-		};		
+		};
 		class sundayCBMonth: DROCombo
 		{
 			idc = 2104;
@@ -670,13 +673,13 @@ class sundayDialog {
 			y = 0.42 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			h = 0.044 * safezoneH;
-		};		
+		};
 		class sundayCBDay: DROCombo
 		{
 			idc = 1301;
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.46 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
+			w = 0.14 * safezoneW;
 			onLBSelChanged = "day = (_this select 1); publicVariable 'day'; ['DAY', (_this select 1)] remoteExec ['sun_setDateMP', 0, true]; profileNamespace setVariable ['DCO_day', (_this select 1)];";		
 		};
 		class sundayTitleWeather: sundayText
@@ -693,7 +696,7 @@ class sundayDialog {
 			idc = 2116;
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.52 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
+			w = 0.14 * safezoneW;
 			onLBSelChanged = "if ((_this select 1) == 0) then {weatherOvercast = 'RANDOM'} else {weatherOvercast = (round (((sliderPosition 2109)/10) * (10 ^ 3)) / (10 ^ 3))}; publicVariable 'weatherOvercast'; if (typeName weatherOvercast isEqualTo 'SCALAR') then {[weatherOvercast] call BIS_fnc_setOvercast;}; profileNamespace setVariable ['DCO_weatherOvercast', weatherOvercast];";		
 		};
 		class sundaySliderWeatherFair: sundayText
@@ -720,7 +723,7 @@ class sundayDialog {
 			idc = 2109;
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.58 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
+			w = 0.14 * safezoneW;
 			onSliderPosChanged = "_mult = ((_this select 1)/10); _rounded = round (_mult * (10 ^ 3)) / (10 ^ 3); lbSetCurSel [2116, 1]; weatherOvercast = _rounded; publicVariable 'weatherOvercast';";
 		};
 		
@@ -735,7 +738,7 @@ class sundayDialog {
 			sizeEx = 0.04;
 		};
 		class droSelectAONew: DROBasicButton
-		{			
+		{
 			idc = 2255;
 			text = "Open Map";
 			x = -0.2 * safezoneW + safezoneX;
@@ -745,7 +748,7 @@ class sundayDialog {
 			action = "[] spawn dro_menuMap";		
 		};
 		class droSelectAOClear: DROBasicButton
-		{			
+		{
 			idc = 2256;
 			text = "Clear AO Location";
 			x = -0.2 * safezoneW + safezoneX;
@@ -754,24 +757,6 @@ class sundayDialog {
 			h = 0.04 * safezoneH;			
 			action = "deleteMarker 'aoSelectMkr'; aoName = nil; ctrlSetText [2202, 'AO location: RANDOM']; selectedLocMarker setMarkerColor 'ColorPink';";		
 		};	
-		class sundayTitleAI: sundayText
-		{
-			idc = 1107;
-			text = "Enemy skill"; //--- ToDo: Localize;
-			x = -0.2 * safezoneW + safezoneX;
-			y = 0.51 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;
-			h = 0.044 * safezoneH;
-			tooltip = "";
-		};
-		class sundayTBAI: DROCombo
-		{
-			idc = 2105;
-			x = -0.2 * safezoneW + safezoneX;
-			y = 0.55 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
-			onLBSelChanged = "aiSkill = (_this select 1); publicVariable 'aiSkill'; profileNamespace setVariable ['DCO_aiSkill', (_this select 1)];";				
-		};
 		class sundayTitleAISize: sundayText
 		{
 			idc = 2110;
@@ -787,7 +772,7 @@ class sundayDialog {
 			idc = 2111;
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.61 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
+			w = 0.14 * safezoneW;
 			onSliderPosChanged = "_mult = ((_this select 1)/10); _rounded = round (_mult * (10 ^ 1)) / (10 ^ 1); ((findDisplay 52525) displayCtrl 2110) ctrlSetText format ['Enemy force size multiplier: x%1', _rounded]; aiMultiplier = _rounded; publicVariable 'aiMultiplier'; profileNamespace setVariable ['DCO_aiMultiplier', _rounded];";
 		};
 		class sundayTitleMines: sundayText
@@ -797,14 +782,14 @@ class sundayDialog {
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.63 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
-			h = 0.044 * safezoneH;			
+			h = 0.044 * safezoneH;
 		};
 		class sundayCBMines: DROCombo
 		{
 			idc = 2113;
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.67 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
+			w = 0.14 * safezoneW;
 			onLBSelChanged = "minesEnabled = (_this select 1); publicVariable 'minesEnabled'; profileNamespace setVariable ['DCO_minesEnabled', (_this select 1)];";				
 		};
 		
@@ -823,9 +808,9 @@ class sundayDialog {
 			idc = 2108;
 			x = -0.2 * safezoneW + safezoneX;
 			y = 0.79 * safezoneH + safezoneY;
-			w = 0.14 * safezoneW;						
+			w = 0.14 * safezoneW;
 			onLBSelChanged = "reviveDisabled = (_this select 1); publicVariable  'reviveDisabled'; profileNamespace setVariable ['DCO_reviveDisabled', (_this select 1)];";			
-		};	
+		};
 		// ADVANCED FACTIONS			
 		class sundayTextAdvPlayer: sundayTextMT
 		{
@@ -844,7 +829,7 @@ class sundayDialog {
 			y = 0.37 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			h = 0.044 * safezoneH;
-		};		
+		};
 		class sundayComboAdvPlayerFactionsG: DROCombo
 		{
 			idc = 3800;
@@ -852,7 +837,7 @@ class sundayDialog {
 			y = 0.41 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			onLBSelChanged = "playersFactionAdv set [0, (_this select 1)]; publicVariable 'playersFactionAdv'";				
-		};		
+		};
 		class sundayComboAdvPlayerFactionsA: DROCombo
 		{
 			idc = 3801;
@@ -877,7 +862,7 @@ class sundayDialog {
 			y = 0.49 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			h = 0.044 * safezoneH;
-		};		
+		};
 		class sundayComboAdvEnemyFactionsG: DROCombo
 		{
 			idc = 3803;
@@ -885,7 +870,7 @@ class sundayDialog {
 			y = 0.53 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			onLBSelChanged = "enemyFactionAdv set [0, (_this select 1)]; publicVariable 'enemyFactionAdv'";				
-		};		
+		};
 		class sundayComboAdvEnemyFactionsA: DROCombo
 		{
 			idc = 3804;
@@ -893,7 +878,7 @@ class sundayDialog {
 			y = 0.56 * safezoneH + safezoneY;
 			w = 0.14 * safezoneW;
 			onLBSelChanged = "enemyFactionAdv set [1, (_this select 1)]; publicVariable 'enemyFactionAdv'";			
-		};		
+		};
 		class sundayComboAdvEnemyFactionsS: DROCombo
 		{
 			idc = 3805;

@@ -16,11 +16,12 @@ if (!hasInterface || isDedicated) exitWith {};
 
 player setVariable ['startReady', false, true];
 playerCameraView = cameraView;
+loadoutSavingStarted = false;
 
 fnc_missionText = {
 	// Mission info readout
 	_campName = (missionNameSpace getVariable "publicCampName");
-	diag_log format ["DRO: Player %1 establishing shot initialised", player];
+	diag_log format ["DRO: Player %1 establishing shot initialized", player];
 	sleep 3;
 	[parseText format [ "<t font='EtelkaMonospaceProBold' color='#ffffff' size = '1.7'>%1</t>", toUpper _campName], true, nil, 5, 0.7, 0] spawn BIS_fnc_textTiles;
 	sleep 6;
@@ -39,7 +40,7 @@ fnc_missionText = {
 	[parseText format [ "<t font='EtelkaMonospaceProBold' color='#ffffff' size = '1.7'>%1  %2</t>", str(date select 1) + "." + str(date select 2) + "." + str(date select 0), _hours + _minutes + " HOURS"], true, nil, 5, 0.7, 0] spawn BIS_fnc_textTiles;
 	sleep 6;
 	// Operation title text
-	_missionName = missionNameSpace getVariable "mName";
+	_missionName = missionNameSpace getVariable ["mName", ""];
 	_string = format ["<t font='EtelkaMonospaceProBold' color='#ffffff' size = '1.7'>%1</t>", _missionName];
 	[parseText format [ "<t font='EtelkaMonospaceProBold' color='#ffffff' size = '1.7'>%1</t>", toUpper _missionName], true, nil, 7, 0.7, 0] spawn BIS_fnc_textTiles;
 };
@@ -52,7 +53,7 @@ if ((configfile >> "CfgPatches" >> "ace_main") call BIS_fnc_getCfgIsClass) then 
 		<br /><br />
 		ACE has been detected and the DRO startup menu will include new options to govern the various ACE variables.<br /><br />
 		All credit for the work on ACE integration goes to Ledere, many thanks to him for taking the time to make this patch and allowing me to integrate it into DRO!
-	"]];
+"]];
 };
 player createDiaryRecord ["dco", ["Hints", "
 <br /><br />
@@ -91,8 +92,8 @@ _doJIP = if (didJIP) then {
 	false
 };
 
-if (_doJIP) exitWith {		
-	
+if (_doJIP) exitWith {
+	["DRO: JIP detected for player %1", player] call bis_fnc_logFormat;
 	//Position
 	_pos = if (getMarkerColor "respawn" == "") then {
 		getMarkerPos "campMkr"
@@ -108,15 +109,16 @@ if (_doJIP) exitWith {
 		};
 	} forEach units (grpNetId call BIS_fnc_groupFromNetId);	
 	if (!isNull _chosenSlotUnit) then {
+		["DRO: JIP player %1 will be selectPlayer'd into %2", player, _chosenSlotUnit] call bis_fnc_logFormat;		
 		selectPlayer _chosenSlotUnit;
 		removeAllActions _chosenSlotUnit;
 		if (reviveDisabled < 3) then {
 			[_chosenSlotUnit] call rev_addReviveToUnit;	
-		};	
+		};
 	} else {
-		_class = (selectRandom unitList);
-		[player, _class] execVM 'sunday_system\switchUnitLoadout.sqf';
-		sleep 1;
+		//_class = (selectRandom unitList);
+		//[player, _class] execVM 'sunday_system\player_setup\switchUnitLoadout.sqf';
+		//sleep 1;
 		[player, _pos] call sun_jipNewUnit;
 	};
 	_allHCs = entities "HeadlessClient_F";
@@ -127,40 +129,58 @@ if (_doJIP) exitWith {
 		_taskDesc = [_x] call BIS_fnc_taskDescription;
 		_taskDest = [_x] call BIS_fnc_taskDestination;		
 		_taskState = [_x] call BIS_fnc_taskState;		
-		_taskType = [_x] call BIS_fnc_taskType;		
-		_id = [_x, player, _taskDesc, _taskDest, _taskState, 1, false, false, _taskType, true] call BIS_fnc_setTask;							
+		_taskType = missionNamespace getVariable [(format ["%1_taskType", _x]), "Default"];	
+		_id = [_x, player, _taskDesc, _taskDest, _taskState, 1, false, false, _taskType, true] call BIS_fnc_setTask;
+		//[_x, _taskType] call BIS_fnc_taskSetType;
 	} forEach _tasks;
+	player createDiaryRecord ["Diary", ["Briefing", briefingString]];
+	_rscLayer cutFadeOut 2;
 	enableSentences true;
 	cutText ["", "BLACK IN", 3];
-	[] call fnc_missionText;	
+	playMusic "";
+	[] call fnc_missionText;
 };
 
-sleep 2;
+sleep 0.1;
 ["objectivesSpawned"] spawn sun_randomCam;
-cutText ["", "BLACK IN", 2];
+
+//cutText ["", "BLACK IN", 2];
 
 //["Preload"] spawn BIS_fnc_arsenal;
 //sleep 2;
 diag_log format ["DRO: Player %1 waiting for factionDataReady", player];
 waitUntil {(missionNameSpace getVariable ["factionDataReady", 0]) == 1};
 diag_log format ["DRO: Player %1 received factionDataReady", player];
-/*
-_dialogPlayer = {
-	if (isPlayer _x) exitWith {
-		_x
-	};
-} forEach (units (group player));
-*/
 waitUntil {!isNil "topUnit"};
-if (player == topUnit) then {
+/*
+_counter = 0;
+while {_counter < 1} do {
+	{
+		((findDisplay 999991) displayCtrl _x) ctrlSetFade _counter;
+		((findDisplay 999991) displayCtrl _x) ctrlCommit 0;
+	} forEach [1000, 1001, 1002];
+	sleep 0.02;
+	_counter = _counter + 0.01;
+};
+closeDialog 1;
+*/
+sleep 3;
+
+_pos = [playerUnitStandbyPosition, 0, 12, 1] call BIS_fnc_findSafePos;
+player setPos _pos;
+
+if (player == topUnit) then {	
 	waitUntil {!dialog};
 	// Faction dialog
 	diag_log "DRO: Create menu dialog";
 	_handle = createDialog "sundayDialog";
 	diag_log format ["DRO: Created dialog: %1", _handle];
 	[] call compile preprocessFileLineNumbers "loadProfile.sqf";
-	[] execVM "sunday_system\dialogs\populateStartupMenu.sqf";	
-};	
+	[] execVM "sunday_system\dialogs\populateStartupMenu.sqf";
+	//playSound "Transition1";
+};
+
+_rscLayer cutFadeOut 2;
 
 //diag_log format ["DRO: Player %1 waiting for serverReady", player];
 //waitUntil {(missionNameSpace getVariable ["serverReady", 0]) == 1};
@@ -170,9 +190,16 @@ if (player != topUnit) then {
 	[toUpper "Please wait while mission is generated", "objectivesSpawned", 1, ""] spawn sun_callLoadScreen;
 };
 
+[] spawn {
+	// Turn off menu music
+	waitUntil {(missionNameSpace getVariable ["factionsChosen", 0]) == 1};
+	10 fadeMusic 0;
+};
+
 diag_log format ["DRO: Player %1 waiting for objectivesSpawned", player];
 waitUntil{(missionNameSpace getVariable ["objectivesSpawned", 0]) == 1};
 diag_log format ["DRO: Player %1 objectivesSpawned == 1", player];
+
 
 // Get camera target point
 _heightEnd = getTerrainHeightASL (missionNameSpace getVariable ["aoCamPos", []]);
@@ -224,6 +251,8 @@ cam camCommitPrepared 3;
 cutText ["", "BLACK IN", 3];
 diag_log "DRO: Intro camera begun";
 
+playMusic "";
+0 fadeMusic 1;
 playmusic [musicIntroSting, 0];
 
 sleep 3;
@@ -251,6 +280,8 @@ camUseNVG false;
 camDestroy cam;	
 diag_log format ["DRO: Player %1 cam terminated", player];	
 
+
+//waitUntil{(missionNameSpace getVariable ["dro_introCamComplete", 0]) == 1};
 // Open map
 _mapOpen = openMap [true, false];
 mapAnimAdd [0, 0.05, markerPos "centerMkr"];
@@ -259,21 +290,71 @@ cutText ["", "BLACK IN", 1];
 hintSilent "Close map when ready to access loadout menu";
 diag_log format ["DRO: Player %1 map initialised", player];
 
-waitUntil {!visibleMap};
-diag_log format ["DRO: Player %1 map closed", player];
-hintSilent "";
+// add select insert position event for admin
+if (player == topUnit) then {
 
-// Open lobby
-_handle = CreateDialog "DRO_lobbyDialog";
-diag_log format ["DRO: Player %1 created DRO_lobbyDialog: %2", player, _handle];
-[] execVM "sunday_system\dialogs\populateLobby.sqf";
+		
+	_aoCoverMarker = createMarkerLocal ["aoCoverMkr", markerPos "centerMkr"];
+	_aoCoverMarker setMarkerShapeLocal "ELLIPSE";
+	_aoCoverMarker setMarkerBrushLocal "Border";
+	_aoCoverMarker setMarkerSizeLocal [2500, 2500];
+	_aoCoverMarker setMarkerColorLocal "ColorRed";
 
-_actionID = player addAction ["Open Team Planning", 
-	{
-		_handle = CreateDialog "DRO_lobbyDialog";
-		[] execVM "sunday_system\dialogs\populateLobby.sqf";
-	}, nil, 6
-];
+	mapAnimAdd [0, 0.05, markerPos "centerMkr"];
+	mapAnimCommit;
+
+	player switchCamera "INTERNAL";
+	[
+		"mapStartSelect",
+		"onMapSingleClick",
+		{		
+			_hint1 = "";
+			_hint2 = "";
+			_newPos = (_pos isFlatEmpty [3, -1, 0.25, 50, 0, false]);
+			if (count _newPos == 0) then {
+				_hint1 = "Terrain too steep."
+			};
+			if (count (nearestTerrainObjects [_pos, ["TREE", "HOUSE"], 30, false, true]) > 0) then {
+				_newPos = [];
+				_hint2 = "Terrain objects too close."
+			};
+			if (count _newPos > 0) then {
+				hintSilent "";
+				deleteMarker "campMkr";
+				customBasePos = _newPos;
+				publicVariable "customBasePos";
+				markerPlayerStart = createMarker ["campMkr", _newPos];
+				markerPlayerStart setMarkerShape "ICON";
+				markerPlayerStart setMarkerColor markerColorPlayers;
+				markerPlayerStart setMarkerType "loc_Bunker";
+				markerPlayerStart setMarkerSize [3, 3];
+				markerPlayerStart setMarkerText "Base Position";
+				if (_newPos inArea "aoCoverMkr") then {			
+					markerPlayerStart setMarkerColor "ColorRed";
+				};
+				publicVariable "markerPlayerStart";
+			} else {
+				hint format ["Position not valid: %1 %2", _hint1, _hint2];
+			};
+		},
+		[]
+	] call BIS_fnc_addStackedEventHandler;
+
+	_hint1 = "<t align='center'><t size='1.2'>Base Placement</t><br /><br />";
+	_hint2 = "Place your desired base location by clicking anywhere on the map.<br /><br />";
+	_hint3 = "The <t color='#ff0000'>red marked radius</t> represents a recommended distance from the AO. Placing within this radius is valid but may cause engagements to begin immediately. The <t color='#0000ff'>blue marked areas</t> show potential airbases. Placing within these areas will cause any planes selected to spawn at the nearby runway.</t>";
+	//hintSilent format ["%1\n\n%2\n\n%3", _hint1, _hint2, _hint3];
+	hintSilent parseText (_hint1 + _hint2 + _hint3);
+	//hintSilent parseText format ["%1%2%3", _hint1, _hint2, _hint3];
+
+	waitUntil {!visibleMap};
+	deleteMarkerLocal _aoCoverMarker;
+	hintSilent "";
+	["mapStartSelect", "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+	player setVariable ['startReady', true, true];
+} else {
+    player setVariable ['startReady', true, true];
+};
 
 while {
 	((missionNameSpace getVariable ["lobbyComplete", 0]) == 0)
@@ -285,6 +366,11 @@ while {
 		((findDisplay 626262) displayCtrl 6006) ctrlSetText format ["Insertion position: %1", (mapGridPosition (getMarkerPos 'campMkr'))];			
 	};
 	{
+		// auto ready for not admin
+		if (_x != topUnit) then {
+			_x setVariable ['startReady', true, true];
+		};
+
 		if (_x getVariable ["startReady", false] OR !isPlayer _x) then {
 			((findDisplay 626262) displayCtrl (_x getVariable "unitNameTagIDC")) ctrlSetTextColor [0.05, 1, 0.5, 1];
 		} else {
@@ -294,6 +380,7 @@ while {
 	if (player == topUnit) then {
 		_allHCs = entities "HeadlessClient_F";
 		_allHPs = allPlayers - _allHCs;
+		
 		if (({(_x getVariable ["startReady", false])} count _allHPs) >= count _allHPs) then {
 			missionNameSpace setVariable ['lobbyComplete', 1, true];	
 		};	
@@ -306,36 +393,52 @@ waitUntil {((missionNameSpace getVariable ["lobbyComplete", 0]) == 1)};
 diag_log format ["DRO: Player %1 received lobbyComplete", player];
 
 // Close dialogs twice in case player has arsenal open
-closeDialog 1;	
-closeDialog 1;	
+closeDialog 1;
+closeDialog 1;
+
+1 fadeSound 0;
 
 player removeAction _actionID;
 
-(format ["DRO: Player %1 lobby closed", player]) remoteExec ["diag_log", 2, false];
+//remove ACE Arsenal from action menu on lobby complete
+player removeAction _actionID2;
 
-//player setVariable ["playerLoadout", (getUnitLoadout player)];
+(format ["DRO: Player %1 lobby closed", player]) remoteExec ["diag_log", 2, false];
 
 cutText ["", "BLACK FADED"];
 
+(format ["DRO: Player %1 preparing to terminate camera %2", player, camLobby]) remoteExec ["diag_log", 2, false];
 camLobby cameraEffect ["terminate","back"];
 camUseNVG false;
 camDestroy camLobby;
+(format ["DRO: Player %1 terminated camera %2", player, camLobby]) remoteExec ["diag_log", 2, false];
 player switchCamera playerCameraView;
-sleep 3;
-//waitUntil {count (missionNameSpace getVariable ["startPos", []]) > 0};
+(format ["DRO: Player %1 switched to cameraView %2", player, cameraView]) remoteExec ["diag_log", 2, false];
 
+waitUntil {count (missionNameSpace getVariable ["startPos", []]) > 0};
+
+3 fadeSound 1;
 enableSentences true;
 cutText ["", "BLACK IN", 3];
+
+//remove ACE Arsenal interaction from team members on lobby complete
+{
+	[_x, 0, ["ACE_MainActions", "AIACEArsenal"]] call ACE_interact_menu_fnc_removeActionFromObject;
+} forEach units player;
 
 // Mission info readout
 [] call fnc_missionText;
 
 // Start saving player loadout periodically
 [] spawn {
+	loadoutSavingStarted = true;
+	playerRespawning = false;
+	diag_log format ["DRO: Initial respawn loadout = %1", (getUnitLoadout player)];
 	while {true} do {
 		sleep 5;
-		if (alive player) then {
-			player setVariable ["respawnLoadout", getUnitLoadout player]; 
+		if (alive player && !playerRespawning) then {
+			player setVariable ["respawnLoadout", getUnitLoadout player, true]; 
 		};
 	};
 };
+

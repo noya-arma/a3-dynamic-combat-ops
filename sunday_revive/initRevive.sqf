@@ -1,3 +1,18 @@
+//handle if someone has revive enabled and also enables revive via the main menu
+if ((configfile >> "CfgPatches" >> "ace_medical") call BIS_fnc_getCfgIsClass) then {	
+	if (!isNil "ace_medical_statemachine_cardiacArrestTime") then {
+		if (ace_medical_statemachine_cardiacArrestTime > 0) then {
+			reviveDisabled = 3;
+			publicVariable "reviveDisabled";
+		};
+	};
+};
+if (reviveDisabled == 3) exitWith {
+	diag_log format ["DRO: ACE Medical enabled, Sunday Revive forcibly disabled."];
+};
+
+
+
 #include "reviveFunctions.sqf";
 
 reviveUnits = units (_this select 0);
@@ -51,12 +66,12 @@ publicVariable "reviveGroup";
 			[(_this select 0), ["HandleRating", {if ((_this select 1) < 0) then {0}}]] remoteExec ["addEventHandler", (_this select 0), true];
 			[(format ["Revive actions added for unit %1 called for %2", (_this select 0), _allPlayers])] remoteExec ["diag_log", 2];	
 		}]] remoteExec ["addEventHandler", _x, true];
-		diag_log format ["Revive initialised for unit %1", _x];
+		diag_log format ["Revive initialized for unit %1", _x];
 		
 	} else {
 		_handlerDamage = _x addEventHandler ["HandleDamage", rev_handleDamage];
 		_handlerKilled = _x addEventHandler ["Killed", rev_handleKilled];
-		diag_log format ["Revive initialised for unit %1", _x];	
+		diag_log format ["Revive initialized for unit %1", _x];	
 	};	
 		
 	private _allPlayers = allPlayers;

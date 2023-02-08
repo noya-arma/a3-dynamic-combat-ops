@@ -43,6 +43,11 @@ missionNameSpace setVariable ["aoLocation", ""];
 publicVariable "aoLocation";
 missionNameSpace setVariable ["lobbyComplete", 0];
 publicVariable "lobbyComplete";
+missionNameSpace setVariable ["playerUnitStandbyPosition", ([[],0,-1] call BIS_fnc_findSafePos), true];
+
+
+// Initialize group management for server
+["Initialize"] call BIS_fnc_dynamicGroups; 
 
 [] execVM "start.sqf";
 

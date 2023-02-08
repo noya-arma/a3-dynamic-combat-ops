@@ -3,10 +3,10 @@
 _time = time;
 
 if (commandStyle == 0) then {
-	_infAttackUsed = false;
-	_vehAttackUsed = false;
-	_vehTransportUsed = false;
-	_heliTransportUsed = false;
+	_infAttackUsed = true;
+	_vehAttackUsed = true;
+	_vehTransportUsed = true;
+	_heliTransportUsed = true;
 	
 	while {time < _time + 60} do {
 		if (count commandGroupsInf > 0 && !_infAttackUsed) then {

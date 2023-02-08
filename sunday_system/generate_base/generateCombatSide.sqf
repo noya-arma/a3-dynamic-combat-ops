@@ -55,21 +55,23 @@ diag_log format ["DCO: _airbase = %1", _airbase];
 // *****
 
 // Create squad vehicle
-[squadVehicle, true, 0] execVM "sunday_system\generate_base\createBaseUnit.sqf";
+//[squadVehicle, true, 0] execVM "sunday_system\generate_base\createBaseUnit.sqf";
 
+/*
 diag_log startUnits;
 {
 	[_x, true, (_forEachIndex + 1)] execVM "sunday_system\generate_base\createBaseUnit.sqf";
 } forEach startUnits;
+*/
 
 // *****
 // BRAVO
 // *****
-
+/*
 {
 	[_x, false, (_forEachIndex + 1)] execVM "sunday_system\generate_base\createBaseUnit.sqf";
 } forEach [[0, "RANDOMINF", 3], [0, "RANDOMINF", 3], [1, "RANDOMVEH", 3], [1, "RANDOMVEH", 3]];
-
+*/
 // Supports
 diag_log format ["DCO: startSupports = %1", startSupports];
 _inc = 0;

@@ -1,4 +1,3 @@
-
 // Control types
 #define CT_STATIC           0
 #define CT_BUTTON           1
@@ -92,12 +91,9 @@
 #define MB_BUTTON_CANCEL  2
 #define MB_BUTTON_USER    4
 
-
 ////////////////
 //Base Classes//
 ////////////////
-
-
 
 class sundayHeading
 {
@@ -112,13 +108,12 @@ class sundayHeading
     text = "";
     shadow = 0;
     font = "RobotoCondensed";
-    SizeEx = 0.05;
+    sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 2) * 0.5";
     fixedWidth = 0;
     x = 0;
     y = 0;
     h = 0;
     w = 0;
-   
 };
 
 class sundayText
@@ -134,13 +129,12 @@ class sundayText
     text = "";
     shadow = 0;
     font = "RobotoCondensed";
-    SizeEx = 0.03;
+    sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";
     fixedWidth = 0;
     x = 0;
     y = 0;
     h = 0;
     w = 0;
-   
 };
 
 class sundayTextMT
@@ -156,13 +150,120 @@ class sundayTextMT
     text = "";
     shadow = 0;
     font = "RobotoCondensed";
-    SizeEx = 0.03;
+    sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.2) * 0.5";
     fixedWidth = 0;
     x = 0;
     y = 0;
     h = 0;
-    w = 0;
-   
+    w = 0;   
+};
+
+class sundaySelButtonPic
+{			
+	idc = -1;
+	access = 0;
+	type = CT_STATIC;   
+	style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
+	text = "\A3\ui_f\data\igui\cfg\simpleTasks\types\navigate_ca.paa";	
+	fade = 1;
+    colorBackground[] = {0,0,0,1};
+    colorText[] = {1,1,1,0.3};
+    font = "PuristaLight";
+    sizeEx = 0;
+    lineSpacing = 0;    
+    fixedWidth = 0;
+    shadow = 0;  	
+	x = "0.5 * pixelGridNoUIScale * pixelW";
+	y = 0;	
+	w = "3 * pixelGridNoUIScale * pixelW";
+	h = "3 * pixelGridNoUIScale * pixelH";
+};
+
+class sundaySelButtonTitle
+{
+    access = 0;
+    idc = -1;
+	fade = 1;	
+    type = CT_STATIC;
+    style = ST_LEFT; 
+    linespacing = 0;
+    colorBackground[] = {0,0,0,0};
+    colorText[] = {1,1,1,1};
+	colorShadow[] = {0,0,0,0.5};
+    text = "";
+    shadow = 0;
+    font = "PuristaMedium";    
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";	
+    fixedWidth = 0;   
+	x = "3.5 * pixelGridNoUIScale * pixelW";
+	y = 0;		
+	w = "11 * pixelGridNoUIScale * pixelW";
+	h = "3 * pixelGridNoUIScale * pixelH";
+};
+
+class sundaySelButtonSelect
+{
+    access = 0;
+    idc = -1;
+	fade = 1;	
+    type = CT_STATIC;
+    style = ST_RIGHT;
+    linespacing = 0;
+    colorBackground[] = {0,0,0,0};
+    colorText[] = {1,1,1,1};
+	colorShadow[] = {0,0,0,0.5};
+    text = "";
+    shadow = 0;
+    font = "PuristaMedium";   
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.5) * 0.5";	
+    fixedWidth = 0;   
+	x = "11.5 * pixelGridNoUIScale * pixelW";
+	y = 0;	
+	w = "12 * pixelGridNoUIScale * pixelW";
+	h = "3 * pixelGridNoUIScale * pixelH";
+};
+
+class sundaySelButton {
+	idc = -1;
+	access = 0;
+    type = CT_BUTTON;
+	style = 2;
+    text = "";
+	fade = 1;
+	colorBackground[] = {0,0,0,0.3};
+	//colorActive[] = {0,0,0,1};
+	colorBackgroundActive[] = {0,0,0,0.1};
+	colorBackgroundDisabled[] = {0.17,0.17,0.17,0.2};
+	colorBorder[] = {0,0,0,1};
+	colorDisabled[] = {1,1,1,0};
+	colorFocused[] = {0,0,0,0.3};
+	colorShadow[] = {0,0,0,0};
+	colorText[] = {1,1,1,1};
+	
+	onMouseEnter = "(_this select 0) ctrlsettextcolor [0,0,0,1];";
+	onMouseExit = "(_this select 0) ctrlsettextcolor [1,1,1,1];";
+				
+	soundEnter[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick2",0.75,1};
+	soundPush[] = {"\A3\ui_f\data\sound\RscButton\soundPush",0.08,0};
+	soundClick[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick1",4,1};
+	soundEscape[] = {"\A3\ui_f\data\sound\RscButton\soundEscape",0.07,1};
+	
+	sizeEx = 0.033;
+	shadow = 0;
+    font = "RobotoCondensed";
+	borderSize = 0;	
+    offsetX = 0.00;
+    offsetY = 0.00;
+    offsetPressedX = 0.00;
+    offsetPressedY = 0.00;
+	
+	x = 0;
+	y = 0;
+	//w = 0.16 * safezoneW; 
+	//w = "16 * (((safezoneW / safezoneH) min 1.2) / 40)";
+	w = "24 * pixelGridNoUIScale * pixelW";
+	h = "4 * pixelGridNoUIScale * pixelW";
+	//h = 0.04 * safezoneH;
 };
 
 class DROCombo {
@@ -175,21 +276,21 @@ class DROCombo {
 	h = 0.025 * safezoneH;
 	x = 0 * safezoneW + safezoneX;
 	y = 0 * safezoneH + safezoneY;
-	sizeEx = 0.033;
-	rowHeight = 0.03;
-	wholeHeight = 4 * 0.10;
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";
+	rowHeight = "((pixelH * (pixelGridNoUIScale) * 2) * 1.3) * 0.5";
+	wholeHeight = "((pixelH * (pixelGridNoUIScale) * 2) * 25) * 0.5";
 	
 	colorSelect[] = {0,0,0,1};
 	colorText[] = {1,1,1,1};
-	colorDisabled[] = {1,1,1,0.5}; // Disabled text color
-	colorBackground[] = {0.1,0.1,0.1,1};
-	colorSelectBackground[] = {0.20,0.40,0.65,1}; // Selected item fill color
-	colorScrollbar[] = {1,1,1,1};
+	colorDisabled[] = {1,1,1,0.85}; // Disabled text color
+	colorBackground[] = {0,0,0,0.85};
+	colorSelectBackground[] = {0.20,0.40,0.65,0.9}; // Selected item fill color
+	colorScrollbar[] = {1,1,1,0.85};
 	font = "RobotoCondensed";
 	
 	soundSelect[] = {"\a3\Ui_f\data\Sound\ReadOut\readoutClick",0.5,1};
-	soundExpand[] = {"",0.3,1};
-	soundCollapse[] = {"\a3\Ui_f\data\Sound\ReadOut\readoutClick",0.5,1};
+	soundExpand[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick2",0.75,1};
+	soundCollapse[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick2",0.5,1};
 	maxHistoryDelay = 1.0;
 	shadow = 0;
 	
@@ -209,15 +310,25 @@ class DROCombo {
 
 		color[] = {1,1,1,1}; // Scrollbar color
 	};
-	
 };
 
-class DROLoadoutSwitch: DROCombo {
-	//w = 0.14 * safezoneW;
-	//h = 0.026 * safezoneH;
-	sizeEx = 0.03;
-	rowHeight = 0.03;
-	wholeHeight = 4 * 0.10;	
+class sundaySpacer: sundayText {
+	access = 0;
+    idc = -1;	
+    colorBackground[] = {1,1,1,0.6};    
+    text = "";
+    x = "1 * pixelGridNoUIScale * pixelW";
+    y = 0;
+	w = "24 * pixelGridNoUIScale * pixelW";	
+	h = "0.1 * pixelGridNoUIScale * pixelH";
+	//h = 0.002 * safezoneH;
+    //w = 0.16 * safezoneW;	
+};
+
+class DROLoadoutSwitch: DROCombo {	
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";
+	rowHeight = "((pixelH * (pixelGridNoUIScale) * 2) * 1.3) * 0.5";
+	wholeHeight = "((pixelH * (pixelGridNoUIScale) * 2) * 25) * 0.5";	
 }
 
 class DROToolBoxMenu {
@@ -240,14 +351,11 @@ class DROToolBoxMenu {
     colorTextDisable[] = {0.4, 0.4, 0.4, 1};
     colorDisable[] = {0.4, 0.4, 0.4, 1};
  
-	sizeEx = 0.025;	
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1) * 0.5";	
     
     rows = 1;
     columns = 1;
     strings[] = {};
-	
-	
-		
 };
 
 class DROCheckBoxRemove {
@@ -264,20 +372,20 @@ class DROCheckBoxRemove {
 	font = "RobotoCondensed";
 	
 	colorBackground[] = {0.2, 0.2, 0.2, 1};
-    colorText[] = {0.8, 0, 0, 1};
+    colorText[] = {0.1, 0.8, 0, 1};
     color[] = {0, 1, 0, 1};
-    colorTextSelect[] = {0.1, 0.8, 0, 1};
+	colorTextSelect[] = {0.8, 0, 0, 1};    
     colorSelect[] = {0, 0, 0, 1};
 	colorSelectedBg[] = {0.1, 0.1, 0.1, 1};
     colorTextDisable[] = {0.4, 0.4, 0.4, 1};
     colorDisable[] = {0.4, 0.4, 0.4, 1};
 	
-	sizeEx = 0.025;	
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1) * 0.75";
     
     rows = 1;
     columns = 1;
-    strings[] = {"X"};
-		
+    checked_strings[] = {"X"};
+	strings[] = {"√"};
 };
 
 class DROCheckBoxSupports {
@@ -302,7 +410,7 @@ class DROCheckBoxSupports {
     colorTextDisable[] = {0.4, 0.4, 0.4, 1};
     colorDisable[] = {0.4, 0.4, 0.4, 1};
  
-	sizeEx = 0.025;	
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1) * 0.5";
     
     rows = 3;
     columns = 1;
@@ -319,17 +427,17 @@ class DROBigButton {
 	
 	colorText[] = {1,1,1,1};
 	colorActive[] = {1,1,1,1};
-    colorDisabled[] = {0.17,0.17,0.17,1};
-	colorBackground[] = {0.17,0.17,0.17,1};
-    colorBackgroundDisabled[] = {0,0,0,1};
-    colorBackgroundActive[] = {0.20,0.40,0.65,1};
-    colorFocused[] = {0.17,0.17,0.17,1};
+    colorDisabled[] = {0.17,0.17,0.17,0.85};
+	colorBackground[] = {0.17,0.17,0.17,0.85};
+    colorBackgroundDisabled[] = {0,0,0,0.85};
+    colorBackgroundActive[] = {0.20,0.40,0.65,0.85};
+    colorFocused[] = {0.17,0.17,0.17,0.85};
     colorShadow[] = {0,0,0,1};
     colorBorder[] = {0,0,0,1};
 	
-    soundEnter[] = {"\A3\ui_f\data\sound\RscButton\soundEnter",0.08,1};
+    soundEnter[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick2",0.75,1};
     soundPush[] = {"\A3\ui_f\data\sound\RscButton\soundPush",0.08,0};
-    soundClick[] = {"\A3\ui_f\data\sound\RscButton\soundClick",0.09,1};
+    soundClick[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick1",4,1};
     soundEscape[] = {"\A3\ui_f\data\sound\RscButton\soundEscape",0.07,1};
     
 	onMouseEnter = "(_this select 0) ctrlsettextcolor [0,0,0,1];";
@@ -341,7 +449,7 @@ class DROBigButton {
     h = 0.039216;
     shadow = 0;
     font = "RobotoCondensed";
-    sizeEx = 0.04;
+    sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.5) * 0.5";
     offsetX = 0.00;
     offsetY = 0.00;
     offsetPressedX = 0.00;
@@ -349,8 +457,6 @@ class DROBigButton {
     borderSize = 0;
 		
 };
-
-
 
 class DROBasicButton {
 	access = 0;
@@ -359,13 +465,13 @@ class DROBasicButton {
     text = "";
 	fade = 1;
 	
-	colorBackground[] = {0.17,0.17,0.17,1};
+	colorBackground[] = {0.17,0.17,0.17,0.85};
 	//colorActive[] = {0,0,0,1};
-	colorBackgroundActive[] = {0.20,0.40,0.65,1};
-	colorBackgroundDisabled[] = {0.17,0.17,0.17,1};
+	colorBackgroundActive[] = {0.20,0.40,0.65,0.85};
+	colorBackgroundDisabled[] = {0.17,0.17,0.17,0.85};
 	colorBorder[] = {0,0,0,1};
 	colorDisabled[] = {1,1,1,0.25};
-	colorFocused[] = {0.17,0.17,0.17,1};
+	colorFocused[] = {0.17,0.17,0.17,0.85};
 	colorShadow[] = {0,0,0,0};
 	colorText[] = {1,1,1,1};
 	
@@ -374,9 +480,9 @@ class DROBasicButton {
 	onMouseExit = "(_this select 0) ctrlsettextcolor [1,1,1,1];";
 	//onSetFocus = "(_this select 0) ctrlsettextcolor [0,0,0,1];";
 	
-    soundEnter[] = {"\A3\ui_f\data\sound\RscButton\soundEnter",0.08,1};
+    soundEnter[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick2",0.75,1};
     soundPush[] = {"\A3\ui_f\data\sound\RscButton\soundPush",0.08,0};
-    soundClick[] = {"\A3\ui_f\data\sound\RscButton\soundClick",0.09,1};
+    soundClick[] = {"\A3\ui_f\data\sound\ReadOut\readoutHideClick1",4,1};
     soundEscape[] = {"\A3\ui_f\data\sound\RscButton\soundEscape",0.07,1};
     
     x = 0;
@@ -384,32 +490,30 @@ class DROBasicButton {
     w = 0.055589;
     h = 0.039216;
     shadow = 0;
-    font = "RobotoCondensed";
-	sizeEx = "(((((safezoneW / safezoneH) min 2) / 2) / 25) * 1)";
+    font = "PuristaMedium";
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";
     offsetX = 0.00;
     offsetY = 0.00;
     offsetPressedX = 0.00;
     offsetPressedY = 0.00;
     borderSize = 0;
-		
 };
 
 class DRONameButton: DROBasicButton{
 	style = 0;	
 	onMouseEnter = "";
 	onMouseExit = "";
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";
 };
 
 class DROVAButton: DROBasicButton {
 	style = 48 + 2048;
-	text = "\A3\ui_f\data\igui\cfg\simpleTasks\types\rifle_ca.paa";	
-	//w = 0.018 * safezoneW;
-	//h = 0.026 * safezoneH;
-	sizeEx = 0.025;
+	text = "\A3\ui_f\data\igui\cfg\simpleTasks\types\rifle_ca.paa";		
+	sizeEx = "((pixelH * (pixelGridNoUIScale) * 2) * 1.25) * 0.5";
 };
 
 class sundaySlider {
-    idc = -1; 
+	idc = -1; 
 	style = SL_HORZ;
 	type = CT_SLIDER;
     x = -0.2; 
@@ -417,9 +521,9 @@ class sundaySlider {
     w = 0.14; 
     h = 0.025; 
     color[] = {1,1,1,0.8};
-   colorActive[] = {1,1,1,1};
-   deletable = 0;   
-   shadow = 0;    
+	colorActive[] = {1,1,1,1};
+	deletable = 0;   
+	shadow = 0;    
 };
 
 class RscPicture
@@ -441,6 +545,58 @@ class RscPicture
     y = 0;
     w = 0.2;
     h = 0.15;
+};
+
+class RscControlsGroupNoScrollbars
+{
+	class VScrollbar
+	{
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+		color[] = {1,1,1,1};
+		colorActive[] = {1,1,1,1};
+		colorDisabled[] = {1,1,1,0.3};
+		autoScrollDelay = 5;
+		autoScrollEnabled = 1;
+		autoScrollRewind = 0;
+		autoScrollSpeed = -1;
+		scrollSpeed = 0.06;
+		width = 0;
+		height = 0;
+		shadow = 0;
+	};
+	class HScrollbar
+	{
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+		color[] = {1,1,1,1};
+		colorActive[] = {1,1,1,1};
+		colorDisabled[] = {1,1,1,0.3};
+		autoScrollDelay = 5;
+		autoScrollEnabled = 0;
+		autoScrollRewind = 0;
+		autoScrollSpeed = -1;
+		scrollSpeed = 0.06;
+		width = 0;
+		height = 0;
+		shadow = 0;
+	};	
+	class Controls
+	{
+	};
+	type = 15;
+	idc = -1;
+	x = "1 * pixelGridNoUIScale * pixelW";
+	y = "0 * pixelGridNoUIScale * pixelH";					
+	w = "24 * pixelGridNoUIScale * pixelW";	
+	h = "4 * pixelGridNoUIScale * pixelH";
+	shadow = 1;
+	style = 16;
+	fade = 0;
 };
 
 class RscControlsGroup
@@ -503,38 +659,38 @@ class RscMapControl
 	style = ST_PICTURE;
 	fade = 1;
 	
-	x = 0.25 * safezoneW + safezoneX;
-	y = 0.2 * safezoneH + safezoneY;
-	w = 0.6 * safezoneW;
-	h = 0.45 * safezoneH;
+	x =0 * safezoneW + safezoneX;
+	y = 0 * safezoneH + safezoneY;
+	w = 0 * safezoneW;
+	h = 0 * safezoneH;
 	
 	alphaFadeStartScale = 2;
 	alphaFadeEndScale = 2;	
-	colorBackground[] = {0.969,0.957,0.949,1};
+	colorBackground[] = {0.369,0.457,0.949,0.2};
 	colorCountlines[] = {0.572,0.354,0.188,0.25};
-	colorCountlinesWater[] = {0.491,0.577,0.702,0.3};
-	colorForest[] = {0.624,0.78,0.388,0.5};
+	colorCountlinesWater[] = {0.491,0.577,0.702,0};
+	colorForest[] = {0.624,0.78,0.388,0};
 	colorForestBorder[] = {0,0,0,0};
-	colorGrid[] = {0.1,0.1,0.1,0.6};
-	colorGridMap[] = {0.1,0.1,0.1,0.6};
+	colorGrid[] = {0.1,0.1,0.1,0};
+	colorGridMap[] = {0.1,0.1,0.1,0};
 	colorInactive[] = {1,1,1,0.5};
-	colorLevels[] = {0.286,0.177,0.094,0.5};
+	colorLevels[] = {0.286,0.177,0.094,0};
 	colorMainCountlines[] = {0.572,0.354,0.188,0.5};
-	colorMainCountlinesWater[] = {0.491,0.577,0.702,0.6};
-	colorMainRoads[] = {0.9,0.5,0.3,1};  
-	colorMainRoadsFill[] = {1,0.6,0.4,1};
+	colorMainCountlinesWater[] = {0.491,0.577,0.702,0};
+	colorMainRoads[] = {0.65,0.5,0.3,1};  
+	colorMainRoadsFill[] = {0.7,0.6,0.4,1};
 	colorNames[] = {0.1,0.1,0.1,0.9};
 	colorOutside[] = {0,0,0,1};
-	colorPowerLines[] = {0.1,0.1,0.1,1};
+	colorPowerLines[] = {0.1,0.1,0.1,0};
 	colorRailWay[] = {0.8,0.2,0,1};
 	colorRoads[] = {0.7,0.7,0.7,1};
 	colorRoadsFill[] = {1,1,1,1};
-	colorRocks[] = {0,0,0,0.3};
+	colorRocks[] = {0,0,0,0};
 	colorRocksBorder[] = {0,0,0,0};  
-	colorSea[] = {0.467,0.631,0.851,0.5};
+	colorSea[] = {0.467,0.631,0.851,0};
 	colorText[] = {0,0,0,1};
 	colorTracks[] = {0.84,0.76,0.65,0.15};
-	colorTracksFill[] = {0.84,0.76,0.65,1};
+	colorTracksFill[] = {0.84,0.76,0.65,0.75};
 	colorTrails[] = {0.84,0.76,0.65,0.15}; 
 	colorTrailsFill[] = {0.84,0.76,0.65,0.65};
 	
@@ -576,8 +732,7 @@ class RscMapControl
 	scaleMin = 0.001;
 	onMouseButtonClick = "";
 	onMouseButtonDblClick = "";
-	
-	
+	widthRailWay = 4;
 	
 	class ActiveMarker {
 		color[] = {0.30, 0.10, 0.90, 1.00};
@@ -862,7 +1017,7 @@ class RscMapControl
 		importance = 1.00;
 		coefMin = 1.00;
 		coefMax = 1.00;
-	  };
+	};
 };
 
 class RscProgress

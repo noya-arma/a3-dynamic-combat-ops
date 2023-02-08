@@ -1,0 +1,117 @@
+#include "sunday_system\dialogs\defines.hpp"
+#include "sunday_system\dialogs\dialogs.hpp"
+
+enableDebugConsole = 1;
+
+corpseManagerMode = 1;
+corpseLimit = 1;
+corpseRemovalMinTime = 300;
+corpseRemovalMaxTime = 3600;
+
+respawn = 3;
+respawnButton = 1;
+respawnDelay = 45;
+respawnVehicleDelay = 30;
+respawnDialog = 0;
+respawnOnStart = 0;
+respawnTemplates[] = {"MenuPosition", "Tickets", "Spectator", "EndMission"};
+
+class Params
+{
+	class Respawn
+	{
+		title = "Respawn";
+		values[] = {0,1,2,3};
+		texts[] = {"20 Seconds", "45 Seconds", "90 Seconds", "Disabled"};
+		default = 1;               
+	};		
+};
+
+class CfgCommunicationMenu
+{
+	class sunSupportTransport
+	{
+		text = "Helicopter transport"; // Text displayed in the menu and in a notification
+        submenu = ""; // Submenu opened upon activation (expression is ignored when submenu is not empty.)
+        expression = "[_pos] call dco_callSupportTransport"; // Code executed upon activation
+		icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\transport_ca.paa"; // Icon displayed permanently next to the command menu
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa"; // Custom cursor displayed when the item is selected
+        enable = "1"; // Simple expression condition for enabling the item
+        removeAfterExpressionCall = 0; // 1 to remove the item after calling
+	};	
+	class infAttack
+    {
+        text = "Order infantry assault"; // Text displayed in the menu and in a notification
+        submenu = ""; // Submenu opened upon activation (expression is ignored when submenu is not empty.)
+        expression = "[commandGroupsInf] spawn dco_attackTrigger"; // Code executed upon activation
+        icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; // Icon displayed permanently next to the command menu
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa"; // Custom cursor displayed when the item is selected
+        enable = "1"; // Simple expression condition for enabling the item
+        removeAfterExpressionCall = 1; // 1 to remove the item after calling
+    };	
+	class vehAttack
+    {
+        text = "Order ground vehicle attack"; // Text displayed in the menu and in a notification
+        submenu = ""; // Submenu opened upon activation (expression is ignored when submenu is not empty.)
+        expression = "[commandGroupsVehicles] spawn dco_attackTrigger;"; // Code executed upon activation
+        icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; // Icon displayed permanently next to the command menu
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa"; // Custom cursor displayed when the item is selected
+        enable = "1"; // Simple expression condition for enabling the item
+        removeAfterExpressionCall = 1; // 1 to remove the item after calling
+    };	
+	class heliTransport
+    {
+        text = "Order helicopter infantry drop"; // Text displayed in the menu and in a notification
+        submenu = ""; // Submenu opened upon activation (expression is ignored when submenu is not empty.)
+        expression = "[commandTransportsHeli] spawn dco_transportTrigger;"; // Code executed upon activation
+        icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\transport_ca.paa"; // Icon displayed permanently next to the command menu
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa"; // Custom cursor displayed when the item is selected
+        enable = "1"; // Simple expression condition for enabling the item
+        removeAfterExpressionCall = 1; // 1 to remove the item after calling
+    };	
+	class vehTransport
+    {
+        text = "Order motorized infantry assault"; // Text displayed in the menu and in a notification
+        submenu = ""; // Submenu opened upon activation (expression is ignored when submenu is not empty.)
+        expression = "[commandTransportsGround] spawn dco_transportTrigger;"; // Code executed upon activation
+        icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; // Icon displayed permanently next to the command menu
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa"; // Custom cursor displayed when the item is selected
+        enable = "1"; // Simple expression condition for enabling the item
+        removeAfterExpressionCall = 1; // 1 to remove the item after calling
+    };
+};
+
+class RscTitles {
+	class SUN_refitProgress {
+		idd = -1;
+		duration = 40;
+		movingEnable = 0;		
+		onLoad = "uiNamespace setVariable ['RscRefit', _this select 0]; ((_this select 0) displayCtrl 8000) progressSetPosition 0;";
+		class Controls
+		{
+			class refitProgressBar: RscProgress 
+			{
+				idc = 8000;
+				fade = 1;
+				x = 0.89 * safezoneW + safezoneX;
+				y = 0.25 * safezoneH + safezoneY;
+				w = 0.1 * safezoneW;
+				h = 0.02 * safezoneH;
+			};
+			class refitText: sundayHeading
+			{
+				idc = 8100;
+				fade = 1;
+				font = "RobotoCondensed";			
+				text = "";
+				x = 0.89 * safezoneW + safezoneX;
+				y = 0.27 * safezoneH + safezoneY;
+				w = 0.1 * safezoneW;
+				h = 0.02 * safezoneH;
+				sizeEx = 0.033;
+				colorBackground[] = {0.2,0.2,0.2, 0.5};
+			};
+		};
+	};	
+};
+

@@ -146,7 +146,7 @@ diag_log format ["timeOfDay = %1", timeOfDay];
 lbSetCurSel [2103, timeOfDay];
 
 // Slider items
-sliderSetRange [2111, 5, 30];
+sliderSetRange [2111, 5, 20];
 ((findDisplay 52525) displayCtrl 2110) ctrlSetText format ["Enemy force size multiplier: x%1", profileNamespace getVariable ['DRO_aiMultiplier', 0]];
 sliderSetPosition [2111, aiMultiplier*10];
 
